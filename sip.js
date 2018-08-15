@@ -108,8 +108,7 @@ function parseAorWithUri(data) {
 function parseVia(data) {
   var r = applyRegex(/SIP\s*\/\s*(\d+\.\d+)\s*\/\s*([\S]+)\s+([^\s;:]+)(?:\s*:\s*(\d+))?/g, data);
   if(!r) {
-    console.log('SIP Parse Error: wrong VIA format');
-    console.log(data);
+    console.log(`SIP Parse Error: wrong VIA format: ${JSON.stringify(data)}`);
   }
   return parseParams(data, {version: r && r[1], protocol: r && r[2], host: r && r[3], port: r && r[4] && +r[4]});
 }
