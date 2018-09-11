@@ -94,8 +94,10 @@ function parseGenericHeader(d, h) {
 
 function parseAOR(data) {
   var r = applyRegex(/((?:[\w\-.!%*_+`'~]+)(?:\s+[\w\-.!%*_+`'~]+)*|"[^"\\]*(?:\\.[^"\\]*)*")?\s*\<\s*([^>]*)\s*\>|((?:[^\s@"<]@)?[^\s;]+)/g, data);
-
-  return parseParams(data, {name: r[1], uri: r[2] || r[3] || ''});
+  if(!r) {
+    console.error(`SIP Parse Error: wrong AOR format: ${JSON.stringify(data)}`);
+  }
+  return parseParams(data, {name: r && r[1], uri: (r && r[2]) || (r && r[3]) || ''});
 }
 exports.parseAOR = parseAOR;
 
