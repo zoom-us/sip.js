@@ -15,14 +15,21 @@ function defaultCallback(rs) {
 
 
 exports.send = function(msg, callback) {
-  var ctx = contexts[makeContextId(msg)];
+  try
+  {
+    var ctx = contexts[makeContextId(msg)];
 
-  if(!ctx) {
-    sip.send.apply(sip, arguments);
-    return;
+    if(!ctx) {
+      sip.send.apply(sip, arguments);
+      return;
+    }
+
+    return msg.method ? forwardRequest(ctx, msg, callback || defaultCallback) : forwardResponse(ctx, msg);
+  } catch (e) {
+    if (global && global.console && global.console.error && typeof (global.console.error) == 'function') {
+      global.console.error(e)
+    }
   }
- 
-  return msg.method ? forwardRequest(ctx, msg, callback || defaultCallback) : forwardResponse(ctx, msg);
 };
 
 
@@ -90,7 +97,7 @@ exports.start = function(options, route) {
 
       if(ctx) {
         sip.send(sip.makeResponse(rq, 200));
-       
+
         ctx.cancelled = true;
         if(ctx.cancellers) {
           Object.keys(ctx.cancellers).forEach(function(c) { ctx.cancellers[c](); });
