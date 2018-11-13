@@ -27,7 +27,11 @@ exports.send = function(msg, callback) {
     return msg.method ? forwardRequest(ctx, msg, callback || defaultCallback) : forwardResponse(ctx, msg);
   } catch (e) {
     if (global && global.console && global.console.error && typeof (global.console.error) == 'function') {
-      global.console.error(e)
+      global.console.error({
+        type:'sip-send-error',
+        info:msg,
+        message:e
+      })
     }
   }
 };
