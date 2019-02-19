@@ -73,7 +73,10 @@ function forwardRequest(ctx, rq, callback) {
         sendCancel(rq, via, route);
     }
     else {
-      delete ctx.cancellers[rs.headers.via[0].params.branch];
+        if(rs.headers && rs.headers.via && rs.headers.via[0] && rs.headers.via[0].params)
+        {
+            delete ctx.cancellers[rs.headers.via[0].params.branch];
+        }
     }
 
     callback(rs, remote);
